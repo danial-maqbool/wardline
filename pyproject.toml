@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wardline"
+version = "1.0.0"
+description = "Hospital capacity command center: patient-flow simulation, bed-placement optimisation, arrival, release and census forecasting."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Danial Maqbool" }]
+keywords = ["healthcare", "patient-flow", "bed-management", "simulation", "forecasting", "operations-research"]
+dependencies = ["fastapi>=0.110", "uvicorn>=0.29", "numpy>=1.26", "scipy>=1.11", "scikit-learn>=1.3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "httpx>=0.27"]
+
+[tool.setuptools]
+packages = ["wardline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::RuntimeWarning"]
