@@ -20,16 +20,23 @@ pytest -q                              # 25 tests
 ## How it fits together
 
 ```mermaid
-flowchart LR
-  H["hospital.py<br/>202 beds, synthetic patients"] --> S["sim.py<br/>discrete-event simulation"]
-  S --> B["Baseline<br/>first come, first served"]
-  S --> W["Wardline placement<br/>Hungarian, every 10 min"]
-  S --> E["Snapshots + ADT events"]
-  E --> M["models.py<br/>arrivals, bed release, census"]
-  B --> R[("results/*.json")]
-  W --> R
-  M --> R
-  R --> A["FastAPI"] --> D["Dashboard<br/>vanilla JS, SVG charts"]
+flowchart TB
+  subgraph sim["1. Simulate 90 days, twice"]
+    direction LR
+    H["hospital.py<br/>202 beds, synthetic patients"] --> S["sim.py<br/>discrete-event simulation"]
+    S --> B["Baseline<br/>first come, first served"]
+    S --> W["Wardline placement<br/>Hungarian, every 10 min"]
+  end
+  subgraph learn["2. Forecast"]
+    direction LR
+    E["Snapshots + ADT events"] --> M["models.py<br/>arrivals, bed release, census"]
+  end
+  subgraph show["3. Show"]
+    direction LR
+    R[("results/*.json")] --> A["FastAPI"] --> D["Dashboard<br/>vanilla JS, SVG charts"]
+  end
+  sim --> learn --> show
+  sim --> show
 ```
 
 Every 10 minutes, and whenever a patient is admitted or a bed is cleaned, Wardline takes every waiting
